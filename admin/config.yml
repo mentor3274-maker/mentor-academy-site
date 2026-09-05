@@ -1,0 +1,128 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# 이미지를 올리면 이 폴더에 저장되고, 홈페이지에서는 이 경로로 불러옵니다.
+media_folder: "images/uploads"
+public_folder: "images/uploads"
+
+locale: "ko"
+
+collections:
+  - name: "site"
+    label: "홈페이지 내용"
+    files:
+      - name: "content"
+        label: "전체 내용"
+        file: "content.json"
+        fields:
+
+          - label: "① 교육원 기본 정보"
+            name: "center"
+            widget: "object"
+            fields:
+              - { label: "기관명", name: "name", widget: "string" }
+              - { label: "전화번호 (화면에 보이는 번호)", name: "phoneText", widget: "string", hint: "예: 010-7554-3274" }
+              - { label: "주소", name: "addr", widget: "string" }
+              - { label: "상담시간 안내문", name: "hours", widget: "string" }
+              - { label: "카카오톡 채널 URL", name: "kakaoUrl", widget: "string", required: false, hint: "카카오톡 채널이 없으면 비워두세요." }
+
+          - label: "핵심 가치 칩 (보통 5개)"
+            name: "core"
+            widget: "list"
+            summary: "{{fields.tag}}"
+            fields:
+              - { label: "아이콘 (이모지)", name: "icon", widget: "string" }
+              - { label: "색상", name: "color", widget: "color" }
+              - { label: "태그", name: "tag", widget: "string" }
+              - { label: "제목", name: "title", widget: "string" }
+              - { label: "설명", name: "desc", widget: "string" }
+
+          - label: "② 프로그램과정의 핵심 — 단계별 문장"
+            name: "coreSteps"
+            widget: "list"
+            summary: "{{fields.text}}"
+            fields:
+              - { label: "아이콘 (이모지)", name: "icon", widget: "string" }
+              - { label: "문장", name: "text", widget: "string", hint: "굵게 강조하려면 강조할 단어를 <b>이렇게</b> 감싸주세요." }
+
+          - label: "단계 흐름 요약 문장"
+            name: "corePath"
+            widget: "string"
+            hint: "예: 철학 → 목소리 → 관계 → 연결 → 얽힘 → 우리 원의 교육과정"
+
+          - label: "프로그램 과정 목록 (번호가 매겨진 카드들)"
+            name: "coreFlow"
+            widget: "list"
+            summary: "{{fields.label}}"
+            fields:
+              - { label: "과정명", name: "label", widget: "string" }
+              - label: "아이콘"
+                name: "icon"
+                widget: "string"
+                hint: "이모지를 그대로 입력하거나, 위 오른쪽 위 미디어 라이브러리에 이미지를 올린 뒤 그 경로(예: images/uploads/파일명.png)를 붙여넣으세요."
+              - { label: "색상", name: "color", widget: "color" }
+
+          - label: "휴일 (달력에 빨간색으로 표시, 공휴일 등)"
+            name: "holidays"
+            widget: "list"
+            hint: "YYYY-MM-DD 형식으로 한 줄에 하나씩 입력하세요. 예: 2026-01-01"
+
+          - label: "③ 교육 일정 안내문 (상단)"
+            name: "scheduleNote"
+            widget: "string"
+
+          - label: "교육 일정 안내문 (하단, 작은 글씨)"
+            name: "scheduleFootnote"
+            widget: "string"
+
+          - label: "이번 달 안내 이미지"
+            name: "scheduleImage"
+            widget: "image"
+            required: false
+
+          - label: "④ 교육 회차 (신청 카드 + 달력에 함께 표시됩니다)"
+            name: "sessions"
+            widget: "list"
+            summary: "{{fields.no}} — {{fields.date}}"
+            fields:
+              - { label: "회차 이름", name: "no", widget: "string", hint: "예: 9월1반 1회차  (반 이름은 '회차' 앞부분으로 자동 묶입니다)" }
+              - { label: "날짜 (달력 계산용)", name: "ymd", widget: "string", hint: "YYYY-MM-DD 형식. 예: 2026-09-11" }
+              - { label: "날짜 (화면 표시용)", name: "date", widget: "string", hint: "예: 9월 11일(금)" }
+              - { label: "시간", name: "time", widget: "string", hint: "예: 16:40~20:00" }
+              - { label: "교육명", name: "title", widget: "string" }
+              - { label: "강사", name: "instructor", widget: "string", required: false }
+              - { label: "아이콘 (이모지)", name: "icon", widget: "string", required: false }
+              - { label: "색상", name: "color", widget: "color", required: false }
+              - { label: "녹화본 제공", name: "rec", widget: "boolean", default: true }
+              - { label: "강의안 제공", name: "files", widget: "boolean", default: true }
+              - { label: "다시보기 제공", name: "play", widget: "boolean", default: true }
+
+          - label: "현장컨설팅 신청예약"
+            name: "reserve"
+            widget: "object"
+            fields:
+              - label: "시간대별 예약 가능 시간"
+                name: "slots"
+                widget: "object"
+                fields:
+                  - { label: "오전", name: "오전", widget: "list", hint: "예: 09:30~12:30" }
+                  - { label: "오후", name: "오후", widget: "list", hint: "예: 13:30~16:30" }
+                  - { label: "저녁", name: "저녁", widget: "list", hint: "예: 17:00~19:00" }
+              - label: "시간대별 컨설팅 지원 내용"
+                name: "guide"
+                widget: "object"
+                fields:
+                  - { label: "오전", name: "오전", widget: "list" }
+                  - { label: "오후", name: "오후", widget: "list" }
+                  - { label: "저녁", name: "저녁", widget: "list" }
+
+          - label: "이번 과정에서 얻어가는 것"
+            name: "benefits"
+            widget: "list"
+            required: false
+            summary: "{{fields.title}}"
+            fields:
+              - { label: "아이콘 (이모지)", name: "icon", widget: "string" }
+              - { label: "제목", name: "title", widget: "string" }
+              - { label: "설명", name: "desc", widget: "string" }
